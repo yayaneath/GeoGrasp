@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>geograsp</name>
-  <version>0.0.0</version>
-  <description>The GeoGrasp package</description>
+  <version>0.1.0</version>
+  <description>The GeoGrasp package: a geometry-based method for computing grasping points on 3D point clouds</description>
 
   <maintainer email="brayan.impata@ua.es">Brayan Impata</maintainer>
 

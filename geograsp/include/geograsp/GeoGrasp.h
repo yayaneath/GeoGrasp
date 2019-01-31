@@ -46,23 +46,6 @@ class GeoGrasp {
     void setGrasps(const int & grasps);
     void setGripTipSize(const int & size);
 
-    pcl::PointXYZ getObjectCentroidPoint() const;
-    pcl::ModelCoefficients getObjectAxisCoeff() const;
-    
-    pcl::PointNormal getFirstGraspPoint() const;
-    pcl::PointNormal getSecondGraspPoint() const;
-    
-    Eigen::Vector3f getGraspNormal() const;
-    pcl::PointCloud<pcl::PointNormal> getGraspPlaneCloud() const;
-
-    pcl::PointCloud<pcl::PointXYZRGB> getFirstPointRadiusCloud() const;
-    pcl::PointCloud<pcl::PointNormal> getFirstPointRadiusNormalCloud() const;
-    pcl::PointCloud<pcl::PointNormal> getFirstPointRadiusVoxelNormalCloud() const;
-
-    pcl::PointCloud<pcl::PointXYZRGB> getSecondPointRadiusCloud() const;
-    pcl::PointCloud<pcl::PointNormal> getSecondPointRadiusNormalCloud() const;
-    pcl::PointCloud<pcl::PointNormal> getSecondPointRadiusVoxelNormalCloud() const;
-
     GraspConfiguration getGrasp(const int & index) const;
     GraspConfiguration getBestGrasp() const;
 
@@ -95,8 +78,6 @@ class GeoGrasp {
 
     std::vector<GraspConfiguration> graspPoints;
     std::vector<float> rankings;
-    std::vector<float> rankings1;
-    std::vector<float> rankings2;
     std::vector<float> pointsDistance;
 
     int numberBestGrasps;
@@ -150,9 +131,7 @@ class GeoGrasp {
       const pcl::PointCloud<pcl::PointNormal>::Ptr & firstNormalCloud,
       const pcl::PointCloud<pcl::PointNormal>::Ptr & secondNormalCloud,
       const int & numGrasps, std::vector<GraspConfiguration> & bestGrasps,
-      std::vector<float> & bestRanks,
-      std::vector<float> & bestRanks1,
-      std::vector<float> & bestRanks2);
+      std::vector<float> & bestRanks);
 };
 
 #endif
