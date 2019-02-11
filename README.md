@@ -30,5 +30,4 @@ Zapata-Impata, B. S., Mateo, C. M., Gil, P., & Pomares, J. (2017). Using Geometr
 	volume = {2},
 	year = {2017}
 }
-
 ```
