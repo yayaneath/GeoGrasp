@@ -25,7 +25,10 @@ This will launch a ROS node that will subscribe to the topic `/cloud_pcd` in whi
 rosrun pcl_ros pcd_to_pointcloud <file.pcd>
 ```
 
-This will publish on a topic called `/cloud_pcd` the contains of the PCD file `<file.pcd>` (either of those included at `GeoGrasp/Data`).
+This will publish on a topic called `/cloud_pcd` the contains of the PCD file `<file.pcd>` (either of those included at `GeoGrasp/Data`). See below an example of the computed points for the example files:
+
+<img src="/data/creeper-isolated.png" width="400"> <img src="/data/objects.png" width="445">
+
 
 # Citation
 [1] Zapata-Impata, B. S., Mateo, C. M., Gil, P., & Pomares, J. (2017). Using Geometry to Detect Grasping Points on 3D Unknown Point Cloud. In Proceedings of the 14th International Conference on Informatics in Control, Automation and Robotics (ICINCO) 2017 (Vol. 2, pp. 154–161). Best Paper Award. SCITEPRESS - Science and Technology Publications. https://doi.org/10.5220/0006470701540161
