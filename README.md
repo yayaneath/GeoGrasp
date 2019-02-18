@@ -1,7 +1,7 @@
-# GeoGrasp - PACKAGE UNDER CONSTRUCTION!
+# GeoGrasp
 Geometry-based method for computing grasping points on 3D point clouds. Find more details at: https://www.researchgate.net/publication/318874422_Using_Geometry_to_Detect_Grasping_Points_on_3D_Unknown_Point_Cloud
 
-We are still working on improving the code efficiency and readability. Moreover, we will add tutorials on the use of GeoGrasp. Nevertheless, the current version of the package already works so a pair of grasping points can be computed for any given 3D point cloud.
+We are still working on improving the code efficiency and readability. Later, we will add tutorials on the use of GeoGrasp to work with robotic graspers.
 
 # Requirements
 The package has been tested on Ubuntu 16.04. GeoGrasp is wrapped in a ROS package with the following dependecies:
@@ -13,19 +13,19 @@ The rest of the dependencies (ROS packages) can be found at the `package.xml` fi
 
 # Examples of use
 
-At `GeoGrasp/data` we have included two PCD files with two scenes. The `creeper-isolated.pcd` holds the 3D point cloud of a toy Creeper standing on a table. In contrast, `objects-example.pcd` contains a 3D point cloud in which there are multiple objets on a table. To test GeoGrasp, simply execute the test script `cloud_processor` included with the package:
+At `GeoGrasp/data` we have included two PCD files with two scenes. The `creeper-isolated.pcd` holds the 3D point cloud of a toy Creeper standing on a table. In contrast, `objects-example.pcd` contains a 3D point cloud in which there are multiple objets on a table. These clouds were captured with a Intel RealSense SR300 camera. To test GeoGrasp, simply execute the test script `cloud_processor` included in the repository:
 
 ```
 rosrun geograsp cloud_processor _topic:="/cloud_pcd"
 ```
 
-This will launch a ROS node that will subscribe to the topic `/cloud_pcd` in which point clouds will be published. The node reads these point clouds and processes them in order to compute the contact points using GeoGrasp. Then, execute the following:
+This launches a ROS node that subscribes to the topic `/cloud_pcd` in which point clouds will be published. The node reads these point clouds and processes them in order to compute the contact points using GeoGrasp. Next, execute the following node (`pcl_ros` ROS package is required for running this example):
 
 ```
 rosrun pcl_ros pcd_to_pointcloud <file.pcd>
 ```
 
-This will publish on a topic called `/cloud_pcd` the contains of the PCD file `<file.pcd>` (either of those included at `GeoGrasp/Data`). See below an example of the computed points for the example files:
+This publishes the contains of the PCD file `<file.pcd>` (either of those included at `GeoGrasp/Data`) on a topic called `/cloud_pcd`. See below an example of the computed points for the example PCD files:
 
 <img src="/data/creeper-isolated.png" width="400"> <img src="/data/objects.png" width="445">
 
