@@ -34,7 +34,7 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
   pcl::removeNaNFromPointCloud(*cloud, *cloud, nanIndices);
 
   // Save to file
-  pcl::io::savePCDFileBinary("original-cloud.pcd", *cloud);
+  //pcl::io::savePCDFileBinary("original-cloud.pcd", *cloud);
 
   // Remove background points
   pcl::PassThrough<pcl::PointXYZRGB> ptFilter;
