@@ -1,5 +1,5 @@
 # GeoGrasp
-Geometry-based method for computing grasping points on 3D point clouds. Find more details at: https://journals.sagepub.com/doi/10.1177/1729881419831846
+Geometry-based method for computing grasping points on 3D point clouds. Find more details at: https://www.researchgate.net/publication/331358070_Fast_Geometry-based_Computation_of_Grasping_Points_on_Three-dimensional_Point_Clouds
 
 We are still working on improving the code efficiency and readability. Later, we will add tutorials on the use of GeoGrasp to work with robotic graspers.
 
