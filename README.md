@@ -29,6 +29,10 @@ This publishes the contains of the PCD file `<file.pcd>` (either of those includ
 
 <img src="/data/creeper-isolated.png" width="400"> <img src="/data/objects.png" width="445">
 
+# Camera orientation
+
+The camera is assummed to be oriented in such a way so its Z axe is pointing towards the table and the Y axe is pointing downwards, somewhat parallel to the table's normal vector. Check the two PCD files included to find an example of this point of view of the camera. In case of willing to use GeoGrasp with a camera on top of the table or another supporting surface (i.e. with its Z axe completely parallel to the table's normal vector), a minor change to the code base is required, so the initial grasping points are correctly found. The `point2cloud` branch has this change included in the file `GeoGrasp.cpp`, from line [#127](https://github.com/yayaneath/GeoGrasp/blob/678ea8490ff852494e55121a33f77cb02214555b/geograsp/lib/geograsp/GeoGrasp.cpp#L127) until line [#212](https://github.com/yayaneath/GeoGrasp/blob/678ea8490ff852494e55121a33f77cb02214555b/geograsp/lib/geograsp/GeoGrasp.cpp#L212). We are working on a way of including this to the master branch so the type of configuration of the camera can be used as a parameter for changing this automatically.
+
 
 # Citation
 [1] Zapata-Impata, B. S., Mateo, C. M., Gil, P., & Pomares, J. (2017). Using Geometry to Detect Grasping Points on 3D Unknown Point Cloud. In Proceedings of the 14th International Conference on Informatics in Control, Automation and Robotics (ICINCO) 2017 (Vol. 2, pp. 154–161). Best Paper Award. SCITEPRESS - Science and Technology Publications. https://doi.org/10.5220/0006470701540161
