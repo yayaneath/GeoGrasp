@@ -33,9 +33,6 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
   std::vector<int> nanIndices;
   pcl::removeNaNFromPointCloud(*cloud, *cloud, nanIndices);
 
-  // Save to file
-  //pcl::io::savePCDFileBinary("original-cloud.pcd", *cloud);
-
   // Remove background points
   pcl::PassThrough<pcl::PointXYZRGB> ptFilter;
   ptFilter.setInputCloud(cloud);
@@ -77,7 +74,6 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
   pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ecExtractor;
   ecExtractor.setClusterTolerance(0.01);
   ecExtractor.setMinClusterSize(750);
-  //ecExtractor.setMaxClusterSize(25000);
   ecExtractor.setSearchMethod(tree);
   ecExtractor.setInputCloud(cloud);
   ecExtractor.extract(clusterIndices);
@@ -127,8 +123,6 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
 
       // Visualize the result
       pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(objectCloud);
-      pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZRGB> planeColor(cloudPlane, 
-        0, 155, 0);
       pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> planeRGB(cloudPlane);
 
       std::string objectLabel = "";
@@ -147,7 +141,6 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
       objectNumber++;
     }
 
-    // viewer->spinOnce();
     while (!viewer->wasStopped())
       viewer->spinOnce(100);
   }
