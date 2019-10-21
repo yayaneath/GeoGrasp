@@ -8,11 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
-find_package(Boost COMPONENTS program_options REQUIRED)
-
 catkin_package(
   CATKIN_DEPENDS pcl_conversions pcl_ros roscpp sensor_msgs
-  DEPENDS Boost
   INCLUDE_DIRS include
   LIBRARIES GeoGrasp
 )

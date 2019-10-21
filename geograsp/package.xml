@@ -34,6 +34,5 @@
     <depend>pcl_ros</depend>
     <depend>roscpp</depend>
     <depend>sensor_msgs</depend>
-    <build_export_depend>boost</build_export_depend>
   </export>
 </package>
