@@ -31,8 +31,14 @@ This publishes the contains of the PCD file `<file.pcd>` (either of those includ
 
 # Camera orientation
 
-The camera is assummed to be oriented in such a way so its Z axe is pointing towards the table and the Y axe is pointing downwards, somewhat parallel to the table's normal vector. Check the two PCD files included to find an example of this point of view of the camera. In case of willing to use GeoGrasp with a camera on top of the table or another supporting surface (i.e. with its Z axe completely parallel to the table's normal vector), a minor change to the code base is required, so the initial grasping points are correctly found. The `point2cloud` branch has this change included in the file `GeoGrasp.cpp`, from line [#131](https://github.com/yayaneath/GeoGrasp/blob/b39a05d54a205b0c10f3f4d6518fcc64b761b885/geograsp/lib/geograsp/GeoGrasp.cpp#L131). We are working on a way of including this to the master branch so the type of configuration of the camera can be used as a parameter for changing this automatically.
+The camera is assummed to be oriented in such a way so its Z axe is pointing towards the table and the Y axe is pointing downwards, somewhat parallel to the table's normal vector. Check the two PCD files included to find an example of this point of view of the camera. In case of willing to use GeoGrasp with a camera on top of the table or another supporting surface (i.e. with its Z axe completely parallel to the table's normal vector), a minor change to the code base is required, so the initial grasping points are correctly found. The `point2cloud` branch has this change included in the file `GeoGrasp.cpp`, from line [#131](https://github.com/yayaneath/GeoGrasp/blob/b39a05d54a205b0c10f3f4d6518fcc64b761b885/geograsp/lib/geograsp/GeoGrasp.cpp#L131).
 
+# TO-DO
+
+- Automatically detect the orientation of the camera w.r.t the supporting surface in order to adapt the algorithm
+- Produce a more advanced output with grasping points and approach vector
+- Change input point clouds types to PointXYZ since colour channels are not used
+- Include example of use of the grasping points with robot
 
 # Citation
 [1] Zapata-Impata, B. S., Mateo, C. M., Gil, P., & Pomares, J. (2017). Using Geometry to Detect Grasping Points on 3D Unknown Point Cloud. In Proceedings of the 14th International Conference on Informatics in Control, Automation and Robotics (ICINCO) 2017 (Vol. 2, pp. 154–161). Best Paper Award. SCITEPRESS - Science and Technology Publications. https://doi.org/10.5220/0006470701540161
