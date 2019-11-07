@@ -42,12 +42,16 @@ class GeoGrasp {
     ~GeoGrasp();
 
     void setBackgroundCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);
+    void setBackgroundPlaneCoeff(const pcl::ModelCoefficients & coefficients);
     void setObjectCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);
     void setGrasps(const int & grasps);
     void setGripTipSize(const int & size);
 
     GraspConfiguration getGrasp(const int & index) const;
     GraspConfiguration getBestGrasp() const;
+
+    pcl::ModelCoefficients getObjectAxisCoeff() const;
+    pcl::ModelCoefficients getBackgroundPlaneCoeff() const;
 
     float getRanking(const int & index) const;
     float getBestRanking() const;
