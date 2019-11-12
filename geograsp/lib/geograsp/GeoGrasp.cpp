@@ -34,6 +34,11 @@ void GeoGrasp::setBackgroundCloud(
   backgroundCloud = cloud;
 }
 
+void GeoGrasp::setBackgroundPlaneCoeff(
+    const pcl::ModelCoefficients & coefficients) {
+  *backgroundPlaneCoeff = coefficients;
+}
+
 void GeoGrasp::setObjectCloud(
     const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud) {
   objectCloud = cloud;
@@ -66,6 +71,14 @@ GraspConfiguration GeoGrasp::getBestGrasp() const {
   return this->getGrasp(0);
 }
 
+pcl::ModelCoefficients GeoGrasp::getObjectAxisCoeff() const {
+  return *objectAxisCoeff;
+}
+
+pcl::ModelCoefficients GeoGrasp::getBackgroundPlaneCoeff() const {
+  return *backgroundPlaneCoeff;
+}
+
 float GeoGrasp::getRanking(const int & index) const {
   float ranking;
 
@@ -95,7 +108,8 @@ void GeoGrasp::compute() {
             << " data points from object cloud" << "\n";
 
   // Background plane
-  computeCloudPlane(this->backgroundCloud, this->backgroundPlaneCoeff);
+  if (backgroundPlaneCoeff->values.size() == 0)
+    computeCloudPlane(this->backgroundCloud, this->backgroundPlaneCoeff);
 
   // Cloud plane filtering
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
