@@ -111,9 +111,14 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
       objectCloud->is_dense = true;
 
       // Create and initialise GeoGrasp
+      pcl::PointCloud<pcl::PointXYZ>::Ptr cloudPlaneXYZ(new pcl::PointCloud<pcl::PointXYZ>());
+      pcl::PointCloud<pcl::PointXYZ>::Ptr objectCloudXYZ(new pcl::PointCloud<pcl::PointXYZ>());
+      pcl::copyPointCloud(*cloudPlane, *cloudPlaneXYZ);
+      pcl::copyPointCloud(*objectCloud, *objectCloudXYZ);
+
       GeoGrasp geoGraspPoints;
-      geoGraspPoints.setBackgroundCloud(cloudPlane);
-      geoGraspPoints.setObjectCloud(objectCloud);
+      geoGraspPoints.setBackgroundCloud(cloudPlaneXYZ);
+      geoGraspPoints.setObjectCloud(objectCloudXYZ);
 
       // Calculate grasping points
       geoGraspPoints.compute();

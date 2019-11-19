@@ -6,14 +6,14 @@ const float kGraspPlaneApprox = 0.007;
 const float kCloudNormalRadius = 0.03;
 
 GeoGrasp::GeoGrasp() :
-    backgroundCloud(new pcl::PointCloud<pcl::PointXYZRGB>),
-    objectCloud(new pcl::PointCloud<pcl::PointXYZRGB>),
+    backgroundCloud(new pcl::PointCloud<pcl::PointXYZ>),
+    objectCloud(new pcl::PointCloud<pcl::PointXYZ>),
     objectNormalCloud(new pcl::PointCloud<pcl::PointNormal>),
     graspPlaneCloud(new pcl::PointCloud<pcl::PointNormal>),
-    firstPointRadiusCloud(new pcl::PointCloud<pcl::PointXYZRGB>),
+    firstPointRadiusCloud(new pcl::PointCloud<pcl::PointXYZ>),
     firstPointRadiusNormalCloud(new pcl::PointCloud<pcl::PointNormal>),
     firstNormalCloudVoxel(new pcl::PointCloud<pcl::PointNormal>),
-    secondPointRadiusCloud(new pcl::PointCloud<pcl::PointXYZRGB>),
+    secondPointRadiusCloud(new pcl::PointCloud<pcl::PointXYZ>),
     secondPointRadiusNormalCloud(new pcl::PointCloud<pcl::PointNormal>),
     secondNormalCloudVoxel(new pcl::PointCloud<pcl::PointNormal>),
     backgroundPlaneCoeff(new pcl::ModelCoefficients),
@@ -30,7 +30,7 @@ GeoGrasp::~GeoGrasp() {
 }
 
 void GeoGrasp::setBackgroundCloud(
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud) {
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) {
   backgroundCloud = cloud;
 }
 
@@ -40,7 +40,7 @@ void GeoGrasp::setBackgroundPlaneCoeff(
 }
 
 void GeoGrasp::setObjectCloud(
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud) {
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) {
   objectCloud = cloud;
 }
 
@@ -52,23 +52,17 @@ void GeoGrasp::setGripTipSize(const int & size) {
   gripTipSize = size;
 }
 
-GraspConfiguration GeoGrasp::getGrasp(const int & index) const {
+GraspConfiguration GeoGrasp::getBestGrasp() const {
   GraspConfiguration grasp;
 
-  if (index > this->numberBestGrasps)
-    std::cout << "Index exceeds number of grasps computed" << "\n";
-  else if (graspPoints.empty())
+  if (this->graspPoints.empty())
     std::cout << "No grasp configurations were found during the computation" << "\n";
   else {
-    grasp.firstPoint = this->graspPoints[index].firstPoint;
-    grasp.secondPoint = this->graspPoints[index].secondPoint;
+    grasp.firstPoint = this->graspPoints[0].firstPoint;
+    grasp.secondPoint = this->graspPoints[0].secondPoint;
   }
 
   return grasp;
-}
-
-GraspConfiguration GeoGrasp::getBestGrasp() const {
-  return this->getGrasp(0);
 }
 
 pcl::ModelCoefficients GeoGrasp::getObjectAxisCoeff() const {
@@ -112,7 +106,7 @@ void GeoGrasp::compute() {
     computeCloudPlane(this->backgroundCloud, this->backgroundPlaneCoeff);
 
   // Cloud plane filtering
-  pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
   float outliersThreshold = 1.0;
   int meanNeighbours = 50;
 
@@ -124,9 +118,9 @@ void GeoGrasp::compute() {
   computeCloudNormals(cloud, kCloudNormalRadius, this->objectNormalCloud);
 
   // Aproximate the object's main axis and centroid
-  pcl::PointCloud<pcl::PointXYZRGB>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-  voxelizeCloud<pcl::PointCloud<pcl::PointXYZRGB>::Ptr, 
-                pcl::VoxelGrid<pcl::PointXYZRGB> >(cloud, voxelRadius, voxelCloud);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud(new pcl::PointCloud<pcl::PointXYZ>);
+  voxelizeCloud<pcl::PointCloud<pcl::PointXYZ>::Ptr, 
+                pcl::VoxelGrid<pcl::PointXYZ> >(cloud, voxelRadius, voxelCloud);
 
   computeCloudGeometry(voxelCloud, this->objectAxisCoeff, this->objectCentroidPoint);
   
@@ -271,10 +265,10 @@ void GeoGrasp::compute() {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GeoGrasp::computeCloudPlane(
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
     pcl::ModelCoefficients::Ptr backPlaneCoeff) {
   pcl::PointIndices::Ptr cloudPlaneInliers(new pcl::PointIndices);
-  pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+  pcl::SACSegmentation<pcl::PointXYZ> seg;
 
   seg.setModelType(pcl::SACMODEL_PLANE);
   seg.setMethodType(pcl::SAC_RANSAC);
@@ -284,10 +278,10 @@ void GeoGrasp::computeCloudPlane(
 }
 
 void GeoGrasp::filterOutliersFromCloud(
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
     const int & meanNeighbours, const float & distanceThreshold,
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr outputCloud) {
-  pcl::StatisticalOutlierRemoval<pcl::PointXYZRGB> sorFilter;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud) {
+  pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sorFilter;
 
   sorFilter.setInputCloud(inputCloud);
   sorFilter.setMeanK(meanNeighbours);
@@ -296,12 +290,12 @@ void GeoGrasp::filterOutliersFromCloud(
 }
 
 void GeoGrasp::computeCloudNormals(
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
     const float & searchRadius,
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudNormals) {
 
-  pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>());
-  pcl::NormalEstimationOMP<pcl::PointXYZRGB,pcl::PointNormal> ne;
+  pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>());
+  pcl::NormalEstimationOMP<pcl::PointXYZ,pcl::PointNormal> ne;
 
   ne.setInputCloud(inputCloud);
   ne.setSearchMethod(tree);
@@ -317,10 +311,10 @@ void GeoGrasp::computeCloudNormals(
 }
 
 void GeoGrasp::computeCloudGeometry(
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
     pcl::ModelCoefficients::Ptr objAxisCoeff, pcl::PointXYZ & objCenterMass) {
   Eigen::Vector3f massCenter, majorVector, middleVector, minorVector;
-  pcl::MomentOfInertiaEstimation<pcl::PointXYZRGB> featureExtractor;
+  pcl::MomentOfInertiaEstimation<pcl::PointXYZ> featureExtractor;
   featureExtractor.setInputCloud(inputCloud);
   featureExtractor.compute();
 
@@ -383,9 +377,9 @@ void GeoGrasp::buildGraspingPlane(const pcl::PointXYZ & planePoint,
 
 void GeoGrasp::getClosestPointsByRadius(const pcl::PointNormal & point,
     const float & radius,
-    const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+    const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
     const pcl::PointCloud<pcl::PointNormal>::Ptr & inputNormalCloud,
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr pointsCloud,
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pointsCloud,
     pcl::PointCloud<pcl::PointNormal>::Ptr normalCloud) {
   pcl::search::KdTree<pcl::PointNormal>::Ptr treeSearch(new pcl::search::KdTree<pcl::PointNormal>());
   pcl::PointIndices::Ptr pointsIndex(new pcl::PointIndices);
@@ -395,8 +389,8 @@ void GeoGrasp::getClosestPointsByRadius(const pcl::PointNormal & point,
 
   if (treeSearch->radiusSearch(point, radius, pointsIndex->indices, 
       pointsSquaredDistance)) {
-    extractInliersCloud<pcl::PointCloud<pcl::PointXYZRGB>::Ptr,
-                        pcl::ExtractIndices<pcl::PointXYZRGB> >(inputCloud,
+    extractInliersCloud<pcl::PointCloud<pcl::PointXYZ>::Ptr,
+                        pcl::ExtractIndices<pcl::PointXYZ> >(inputCloud,
                           pointsIndex, pointsCloud);
     extractInliersCloud<pcl::PointCloud<pcl::PointNormal>::Ptr,
                         pcl::ExtractIndices<pcl::PointNormal> >(inputNormalCloud, 

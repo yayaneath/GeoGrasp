@@ -41,13 +41,12 @@ class GeoGrasp {
     GeoGrasp();
     ~GeoGrasp();
 
-    void setBackgroundCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);
+    void setBackgroundCloud(const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
     void setBackgroundPlaneCoeff(const pcl::ModelCoefficients & coefficients);
-    void setObjectCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);
+    void setObjectCloud(const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud);
     void setGrasps(const int & grasps);
     void setGripTipSize(const int & size);
 
-    GraspConfiguration getGrasp(const int & index) const;
     GraspConfiguration getBestGrasp() const;
 
     pcl::ModelCoefficients getObjectAxisCoeff() const;
@@ -59,16 +58,16 @@ class GeoGrasp {
     void compute();
 
   private:
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr backgroundCloud;
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr objectCloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr backgroundCloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr objectCloud;
     pcl::PointCloud<pcl::PointNormal>::Ptr objectNormalCloud;
     pcl::PointCloud<pcl::PointNormal>::Ptr graspPlaneCloud;
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr firstPointRadiusCloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr firstPointRadiusCloud;
     pcl::PointCloud<pcl::PointNormal>::Ptr firstPointRadiusNormalCloud;
     pcl::PointCloud<pcl::PointNormal>::Ptr firstNormalCloudVoxel;
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr secondPointRadiusCloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr secondPointRadiusCloud;
     pcl::PointCloud<pcl::PointNormal>::Ptr secondPointRadiusNormalCloud;
     pcl::PointCloud<pcl::PointNormal>::Ptr secondNormalCloudVoxel;
 
@@ -89,21 +88,21 @@ class GeoGrasp {
 
     // Auxiliary functions
 
-    void computeCloudPlane(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & cloud,
+    void computeCloudPlane(const pcl::PointCloud<pcl::PointXYZ>::Ptr & cloud,
       pcl::ModelCoefficients::Ptr backPlaneCoeff);
 
     void filterOutliersFromCloud(
-      const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+      const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
       const int & meanNeighbours, const float & distanceThreshold,
-      pcl::PointCloud<pcl::PointXYZRGB>::Ptr outputCloud);
+      pcl::PointCloud<pcl::PointXYZ>::Ptr outputCloud);
 
     void computeCloudNormals(
-      const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+      const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
       const float & searchRadius,
       pcl::PointCloud<pcl::PointNormal>::Ptr cloudNormals);
 
     void computeCloudGeometry(
-      const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+      const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
       pcl::ModelCoefficients::Ptr objAxisCoeff, pcl::PointXYZ & objCenterMass);
 
     template<typename T, typename U>
@@ -118,9 +117,9 @@ class GeoGrasp {
 
     void getClosestPointsByRadius(const pcl::PointNormal & point,
       const float & radius,
-      const pcl::PointCloud<pcl::PointXYZRGB>::Ptr & inputCloud,
+      const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
       const pcl::PointCloud<pcl::PointNormal>::Ptr & inputNormalCloud,
-      pcl::PointCloud<pcl::PointXYZRGB>::Ptr pointsCloud,
+      pcl::PointCloud<pcl::PointXYZ>::Ptr pointsCloud,
       pcl::PointCloud<pcl::PointNormal>::Ptr normalCloud);
 
     template<typename T, typename U>
