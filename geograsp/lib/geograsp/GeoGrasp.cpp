@@ -73,21 +73,15 @@ pcl::ModelCoefficients GeoGrasp::getBackgroundPlaneCoeff() const {
   return *backgroundPlaneCoeff;
 }
 
-float GeoGrasp::getRanking(const int & index) const {
+float GeoGrasp::getBestRanking() const {
   float ranking;
 
-  if (index > this->numberBestGrasps)
-    std::cout << "Index exceeds number of grasps computed" << "\n";
-  else if (graspPoints.empty())
+  if (this->graspPoints.empty())
     std::cout << "No grasp configurations were found during the computation" << "\n";
   else
-    ranking = this->rankings[index];
+    ranking = this->rankings[0];
 
   return ranking;
-}
-
-float GeoGrasp::getBestRanking() const {
-  return this->getRanking(0);
 }
 
 void GeoGrasp::compute() {

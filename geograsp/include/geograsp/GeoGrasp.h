@@ -30,7 +30,6 @@
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/features/moment_of_inertia_estimation.h>
 
-
 struct GraspConfiguration {
   pcl::PointNormal firstPoint;
   pcl::PointNormal secondPoint;
@@ -52,7 +51,6 @@ class GeoGrasp {
     pcl::ModelCoefficients getObjectAxisCoeff() const;
     pcl::ModelCoefficients getBackgroundPlaneCoeff() const;
 
-    float getRanking(const int & index) const;
     float getBestRanking() const;
 
     void compute();
