@@ -47,11 +47,13 @@ class GeoGrasp {
     void setGripTipSize(const int & size);
 
     GraspConfiguration getBestGrasp() const;
+    std::vector<GraspConfiguration> getGrasps() const;
 
     pcl::ModelCoefficients getObjectAxisCoeff() const;
     pcl::ModelCoefficients getBackgroundPlaneCoeff() const;
 
     float getBestRanking() const;
+    std::vector<float> getRankings() const;
 
     void compute();
 
@@ -84,6 +86,11 @@ class GeoGrasp {
     int numberBestGrasps;
     int gripTipSize;
 
+    // Distance threshold for the grasp plane cloud
+    static const float kGraspPlaneApprox;
+    // Radius used to compute point cloud normals
+    static const float kCloudNormalRadius;
+
     // Auxiliary functions
 
     void computeCloudPlane(const pcl::PointCloud<pcl::PointXYZ>::Ptr & cloud,
@@ -106,6 +113,10 @@ class GeoGrasp {
     template<typename T, typename U>
     void extractInliersCloud(const T & inputCloud,
       const pcl::PointIndices::Ptr & inputCloudInliers, T outputCloud);
+
+    void findInitialPointsInSideView();
+
+    void findInitialPointsInTopView();
 
     void buildGraspingPlane(const pcl::PointXYZ & planePoint,
       const Eigen::Vector3f & planeNormalVector, const float & distanceThreshold,

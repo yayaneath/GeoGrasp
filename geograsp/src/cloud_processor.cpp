@@ -40,6 +40,16 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
   ptFilter.setFilterLimits(0.0, 1.5);
   ptFilter.filter(*cloud);
 
+  ptFilter.setInputCloud(cloud);
+  ptFilter.setFilterFieldName("y");
+  ptFilter.setFilterLimits(-0.55, 0.40);
+  ptFilter.filter(*cloud);
+
+  ptFilter.setInputCloud(cloud);
+  ptFilter.setFilterFieldName("x");
+  ptFilter.setFilterLimits(-0.50, 0.50);
+  ptFilter.filter(*cloud);
+
   // Create the segmentation object for the planar model and set all the parameters
   pcl::SACSegmentation<pcl::PointXYZRGB> sacSegmentator;
   pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
@@ -49,7 +59,7 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
   sacSegmentator.setModelType(pcl::SACMODEL_PLANE);
   sacSegmentator.setMethodType(pcl::SAC_RANSAC);
   sacSegmentator.setMaxIterations(50);
-  sacSegmentator.setDistanceThreshold(0.01);
+  sacSegmentator.setDistanceThreshold(0.02);
   sacSegmentator.setInputCloud(cloud);
   sacSegmentator.segment(*inliers, *coefficients);
 
