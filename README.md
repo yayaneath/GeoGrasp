@@ -31,7 +31,6 @@ This publishes the contains of the PCD file `<file.pcd>` (either of those includ
 
 # TO-DOs
 
-- Produce a more advanced output with grasping points and approach vector
 - Include example of use of the grasping points with robot
 
 # Citation
