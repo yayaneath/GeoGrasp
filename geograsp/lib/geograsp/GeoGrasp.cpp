@@ -67,14 +67,6 @@ std::vector<GraspConfiguration> GeoGrasp::getGrasps() const {
   return this->graspPoints;
 }
 
-pcl::ModelCoefficients GeoGrasp::getObjectAxisCoeff() const {
-  return *objectAxisCoeff;
-}
-
-pcl::ModelCoefficients GeoGrasp::getBackgroundPlaneCoeff() const {
-  return *backgroundPlaneCoeff;
-}
-
 float GeoGrasp::getBestRanking() const {
   float ranking;
 
@@ -88,6 +80,14 @@ float GeoGrasp::getBestRanking() const {
 
 std::vector<float> GeoGrasp::getRankings() const {
   return this->rankings;
+}
+
+pcl::ModelCoefficients GeoGrasp::getObjectAxisCoeff() const {
+  return *objectAxisCoeff;
+}
+
+pcl::ModelCoefficients GeoGrasp::getBackgroundPlaneCoeff() const {
+  return *backgroundPlaneCoeff;
 }
 
 void GeoGrasp::compute() {
@@ -153,7 +153,7 @@ void GeoGrasp::compute() {
   float objWidth = pcl::geometry::distance(this->firstGraspPoint.getVector3fMap(),
     this->secondGraspPoint.getVector3fMap());
 
-  if (graspRadius * 2 >= objWidth)
+  if (graspRadius * 2.0 >= objWidth)
     graspRadius = objWidth * 0.7 / 2.0;
 
   // Grasping areas
@@ -185,9 +185,8 @@ void GeoGrasp::compute() {
   std::cout << "===============================\n";
 }
 
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - AUXILIARY FUNCTIONS - - - - - - - - - - - - - - -
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void GeoGrasp::computeCloudPlane(
@@ -494,8 +493,7 @@ void GeoGrasp::buildGraspingPlane(const pcl::PointXYZ & planePoint,
 }
 
 void GeoGrasp::getClosestPointsByRadius(const pcl::PointNormal & point,
-    const float & radius,
-    const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
+    const float & radius, const pcl::PointCloud<pcl::PointXYZ>::Ptr & inputCloud,
     const pcl::PointCloud<pcl::PointNormal>::Ptr & inputNormalCloud,
     pcl::PointCloud<pcl::PointXYZ>::Ptr pointsCloud,
     pcl::PointCloud<pcl::PointNormal>::Ptr normalCloud) {
@@ -534,9 +532,9 @@ void GeoGrasp::voxelizeCloud(const T & inputCloud, const float & leafSize,
 //    - angle between the line formed by the grasping points and their normals
 //
 // In addition, these ranked points cannot be closer to the centroid than the
-// initial points to avoid searching in the objects facing surface, and their
+// initial points to avoid searching in the objects facing surface, and they
 // must be distanced from each other at least as the initial points. 
-// Furtheremore, those new points cannot be closer to the other side initial
+// Furthermore, those new points cannot be closer to the other side initial
 // points.
 //
 // @param firstInitialPoint -> Point in the first area which is the initial 
@@ -562,7 +560,7 @@ void GeoGrasp::getBestGraspingPoints(
     const pcl::PointCloud<pcl::PointNormal>::Ptr & secondNormalCloud,
     const int & numGrasps, std::vector<GraspConfiguration> & bestGrasps,
     std::vector<float> & bestRanks) {
-  const float weightR1 = 1.5, weightR2 = 1.0; // TODO: FIND BEST VALUES FOR W1 AND W2
+  const float weightR1 = 1.5, weightR2 = 1.0; // BEST VALUES FOR W1 AND W2
 
   ////////////////////////////////////////////////////////////////////////////////
   // First we obtain the min and max values in order to normalize data
@@ -658,7 +656,6 @@ void GeoGrasp::getBestGraspingPoints(
     centroidVector);
   float pointRank1 = 0.0, pointRank2 = 0.0, pointRank = 0.0;
   float epsilon = 1e-8; // Needed to avoid division by zero
-  const float e = 2.71828182845904523536;
 
   firstMinDistance = (firstMinDistance + epsilon - firstCentroidDistanceMin) /
                     (firstCentroidDistanceMax - firstCentroidDistanceMin);
@@ -761,8 +758,12 @@ void GeoGrasp::getBestGraspingPoints(
           ++rank, ++graspsIt) {
         if (pointRank > bestRanks[rank]) {
           GraspConfiguration newGrasp;
-          newGrasp.firstPoint = firstPoint;
-          newGrasp.secondPoint = secondPoint;
+          newGrasp.firstPoint.x = firstPoint.x;
+          newGrasp.firstPoint.y = firstPoint.y;
+          newGrasp.firstPoint.z = firstPoint.z;
+          newGrasp.secondPoint.x = secondPoint.x;
+          newGrasp.secondPoint.y = secondPoint.y;
+          newGrasp.secondPoint.z = secondPoint.z;
 
           bestRanks.insert(bestRanks.begin() + rank, pointRank);
           bestGrasps.insert(graspsIt, newGrasp);
@@ -777,7 +778,7 @@ void GeoGrasp::getBestGraspingPoints(
   bestGrasps.resize(numGrasps);
 
   ////////////////////////////////////////////////////////////////////////////////
-  // No grasp configurations found
+  // No grasp configurations found, then add initial points
 
   if (std::numeric_limits<float>::min() == *bestRanks.begin()) {
     GraspConfiguration newGrasp;

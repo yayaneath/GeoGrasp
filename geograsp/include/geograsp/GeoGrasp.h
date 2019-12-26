@@ -31,8 +31,8 @@
 #include <pcl/features/moment_of_inertia_estimation.h>
 
 struct GraspConfiguration {
-  pcl::PointNormal firstPoint;
-  pcl::PointNormal secondPoint;
+  pcl::PointXYZ firstPoint;
+  pcl::PointXYZ secondPoint;
 };
 
 class GeoGrasp {
@@ -49,11 +49,11 @@ class GeoGrasp {
     GraspConfiguration getBestGrasp() const;
     std::vector<GraspConfiguration> getGrasps() const;
 
-    pcl::ModelCoefficients getObjectAxisCoeff() const;
-    pcl::ModelCoefficients getBackgroundPlaneCoeff() const;
-
     float getBestRanking() const;
     std::vector<float> getRankings() const;
+
+    pcl::ModelCoefficients getObjectAxisCoeff() const;
+    pcl::ModelCoefficients getBackgroundPlaneCoeff() const;
 
     void compute();
 

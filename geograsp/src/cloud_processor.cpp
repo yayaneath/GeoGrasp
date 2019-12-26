@@ -129,6 +129,8 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
       GeoGrasp geoGraspPoints;
       geoGraspPoints.setBackgroundCloud(cloudPlaneXYZ);
       geoGraspPoints.setObjectCloud(objectCloudXYZ);
+      geoGraspPoints.setGripTipSize(25); // 25mm grip
+      geoGraspPoints.setGrasps(1); // Keep track only of the best
 
       // Calculate grasping points
       geoGraspPoints.compute();
