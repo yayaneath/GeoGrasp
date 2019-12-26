@@ -136,7 +136,8 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
       geoGraspPoints.compute();
 
       // Extract best pair of points
-      GraspConfiguration bestGrasp = geoGraspPoints.getBestGrasp();
+      GraspContacts bestGrasp = geoGraspPoints.getBestGrasp();
+      GraspPose bestPose = geoGraspPoints.getBestGraspPose();
 
       // Visualize the result
       pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(objectCloud);
@@ -154,6 +155,39 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr & inputCloudMsg) {
 
       viewer->addSphere(bestGrasp.firstPoint, 0.01, 0, 0, 255, objectLabel + "First best grasp point");
       viewer->addSphere(bestGrasp.secondPoint, 0.01, 255, 0, 0, objectLabel + "Second best grasp point");
+
+      pcl::ModelCoefficients axeX;
+      axeX.values.resize (6);    // We need 6 values
+      axeX.values[0] = bestPose.midPointPose.translation()[0];
+      axeX.values[1] = bestPose.midPointPose.translation()[1];
+      axeX.values[2] = bestPose.midPointPose.translation()[2];
+      axeX.values[3] = bestPose.midPointPose.linear()(0, 0);
+      axeX.values[4] = bestPose.midPointPose.linear()(1, 0);
+      axeX.values[5] = bestPose.midPointPose.linear()(2, 0);
+
+      viewer->addLine(axeX, objectLabel + "Pose axeX");
+
+      pcl::ModelCoefficients axeY;
+      axeY.values.resize (6);    // We need 6 values
+      axeY.values[0] = bestPose.midPointPose.translation()[0];
+      axeY.values[1] = bestPose.midPointPose.translation()[1];
+      axeY.values[2] = bestPose.midPointPose.translation()[2];
+      axeY.values[3] = bestPose.midPointPose.linear()(0, 1);
+      axeY.values[4] = bestPose.midPointPose.linear()(1, 1);
+      axeY.values[5] = bestPose.midPointPose.linear()(2, 1);
+
+      viewer->addLine(axeY, objectLabel + "Pose axeY");
+
+      pcl::ModelCoefficients axeZ;
+      axeZ.values.resize (6);    // We need 6 values
+      axeZ.values[0] = bestPose.midPointPose.translation()[0];
+      axeZ.values[1] = bestPose.midPointPose.translation()[1];
+      axeZ.values[2] = bestPose.midPointPose.translation()[2];
+      axeZ.values[3] = bestPose.midPointPose.linear()(0, 2);
+      axeZ.values[4] = bestPose.midPointPose.linear()(1, 2);
+      axeZ.values[5] = bestPose.midPointPose.linear()(2, 2);
+
+      viewer->addLine(axeZ, objectLabel + "Pose axeZ");
       
       objectNumber++;
     }
