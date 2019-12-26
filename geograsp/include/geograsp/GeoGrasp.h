@@ -30,9 +30,15 @@
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/features/moment_of_inertia_estimation.h>
 
-struct GraspConfiguration {
+struct GraspContacts {
   pcl::PointXYZ firstPoint;
   pcl::PointXYZ secondPoint;
+};
+
+struct GraspPose {
+  Eigen::Vector3f firstPoint;
+  Eigen::Vector3f secondPoint;
+  Eigen::Affine3f midPointPose;
 };
 
 class GeoGrasp {
@@ -46,8 +52,10 @@ class GeoGrasp {
     void setGrasps(const int & grasps);
     void setGripTipSize(const int & size);
 
-    GraspConfiguration getBestGrasp() const;
-    std::vector<GraspConfiguration> getGrasps() const;
+    GraspContacts getBestGrasp() const;
+    std::vector<GraspContacts> getGrasps() const;
+
+    GraspPose getBestGraspPose() const;
 
     float getBestRanking() const;
     std::vector<float> getRankings() const;
@@ -79,7 +87,7 @@ class GeoGrasp {
     pcl::PointNormal firstGraspPoint;
     pcl::PointNormal secondGraspPoint;
 
-    std::vector<GraspConfiguration> graspPoints;
+    std::vector<GraspContacts> graspPoints;
     std::vector<float> rankings;
     std::vector<float> pointsDistance;
 
@@ -142,7 +150,7 @@ class GeoGrasp {
       const pcl::PointXYZ & centroidPoint,
       const pcl::PointCloud<pcl::PointNormal>::Ptr & firstNormalCloud,
       const pcl::PointCloud<pcl::PointNormal>::Ptr & secondNormalCloud,
-      const int & numGrasps, std::vector<GraspConfiguration> & bestGrasps,
+      const int & numGrasps, std::vector<GraspContacts> & bestGrasps,
       std::vector<float> & bestRanks);
 };
 
